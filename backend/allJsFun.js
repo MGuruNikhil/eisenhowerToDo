@@ -71,3 +71,25 @@ export function navAndGet(arr, points) {
         }
     }
 }
+
+export function navAndUpdate(arr, points, newTitle) {
+    if (points.length == 1) {
+        if (points[0].split('.').length == 1) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].title == points[0]) {
+                    arr[i].title = newTitle;
+                    return;
+                }
+            }
+        }
+    } else {
+        const title = points[0].split('.')[0];
+        const quad = points[0].split('.')[1];
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].title == title) {
+                points.shift();
+                return navAndUpdate(arr[i][quad], points, newTitle);
+            }
+        }
+    }
+}
