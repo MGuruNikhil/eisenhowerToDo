@@ -93,3 +93,25 @@ export function navAndUpdate(arr, points, newTitle) {
         }
     }
 }
+
+export function navAndDelete(arr, points) {
+    if (points.length == 1) {
+        if (points[0].split('.').length == 1) {
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].title == points[0]) {
+                    arr.splice(i,1);
+                    return;
+                }
+            }
+        }
+    } else {
+        const title = points[0].split('.')[0];
+        const quad = points[0].split('.')[1];
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].title == title) {
+                points.shift();
+                return navAndDelete(arr[i][quad], points);
+            }
+        }
+    }
+}

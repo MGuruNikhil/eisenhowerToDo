@@ -1,7 +1,7 @@
 import express from "express";
 import passport from "passport";
 import { ToDo } from "../model/todoModel.js";
-import { getAllTitles, navAndGet, navAndInsert, navAndUpdate } from "../allJsFun.js";
+import { getAllTitles, navAndDelete, navAndGet, navAndInsert, navAndUpdate } from "../allJsFun.js";
 
 const router = express.Router();
 
@@ -163,4 +163,52 @@ router.put("/",passport.authenticate('jwt', { session: false }), async (req, res
     }
 });
 
+router.delete("/",passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        let { path, text } = req.body;
+        const currentUser = req.user;
+        const userId = currentUser._id;
+
+        if (!path) {
+            return res.status(400).send({
+                message: "Send all the required data (path)",
+            });
+        }
+
+        const filter = { userId: userId };
+
+        if(path == "home") {
+            await ToDo.findOneAndDelete(filter);
+            return res.status(200).send({
+                message: "your entire toDo nest is deleted successfuly"
+            })
+        }
+
+        let toDo = await ToDo.findOne(filter);
+
+        if (!toDo) {
+            return res.status(404).send({
+                message: "Your todo nest not found",
+            });
+        }
+
+        const points = path.split("/");
+
+        const firstQ = points.shift();
+
+        navAndDelete(toDo.todo[firstQ], points);
+
+        await toDo.save();
+
+        return res.status(201).send({
+            message: "deleted successfully",
+        });
+
+    } catch (error) {
+        console.log(error.message);
+        res.status(500).send({
+            message: error.message,
+        });
+    }
+});
 export default router;
