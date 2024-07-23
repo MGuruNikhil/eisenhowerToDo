@@ -22,7 +22,7 @@ const List = (props) => {
         case 'nu':
             heading = "Not Important & Urgent";
             break;
-        case 'nu':
+        case 'nn':
             heading = "Not Important & Not Urgent";
             break;
         default:
