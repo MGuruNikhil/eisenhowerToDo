@@ -71,17 +71,16 @@ export function LogIn() {
                             <CardDescription>Enter your credentials and login to continue.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            
-                                <div className="grid w-full items-center gap-4">
-                                    <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="email">Email</Label>
-                                        <Input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" placeholder="Your registered email adderss" />
-                                    </div>
-                                    <div className="flex flex-col space-y-1.5">
-                                        <Label htmlFor="password">Password</Label>
-                                        <Input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="password" placeholder="Password" />
-                                    </div>
+                            <div className="grid w-full items-center gap-4">
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" placeholder="Your registered email adderss" />
                                 </div>
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="password">Password</Label>
+                                    <Input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="password" placeholder="Password" />
+                                </div>
+                            </div>
                         </CardContent>
                         <CardFooter className="flex justify-between">
                             <Button onClick={() => navigate('/signup') } variant="outline">Sign Up</Button>

@@ -72,7 +72,8 @@ router.post("/", passport.authenticate('jwt', { session: false }), async (req, r
 
 router.get("/", passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        let { path } = req.body;
+        let { path } = req.query;
+        console.log(path);
         const currentUser = req.user;
         const userId = currentUser._id;
 
@@ -165,7 +166,7 @@ router.put("/",passport.authenticate('jwt', { session: false }), async (req, res
 
 router.delete("/",passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        let { path, text } = req.body;
+        let { path } = req.body;
         const currentUser = req.user;
         const userId = currentUser._id;
 

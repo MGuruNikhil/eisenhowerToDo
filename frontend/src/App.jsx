@@ -9,9 +9,9 @@ function App() {
         <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
             <BrowserRouter>
                 <Routes>
-                    <Route path='/' element={<Home />} />
-                    <Route path='/signup' element={<SignUp />} />
-                    <Route path='/login' element={<LogIn />} />
+                    {/* <Route path='/signup' element={<SignUp />} />
+                    <Route path='/login' element={<LogIn />} /> */}
+                    <Route path="/*" element={<Home />} />
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

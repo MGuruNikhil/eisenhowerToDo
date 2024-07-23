@@ -1,7 +1,7 @@
 export function navAndInsert(arr, points, newItem) {
     if (points.length == 1) {
-        const title = points[0].split('.')[0];
-        const quad = points[0].split('.')[1];
+        const title = points[0].split('~')[0];
+        const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i].title == title) {
                 arr[i][quad].push(newItem);
@@ -9,8 +9,8 @@ export function navAndInsert(arr, points, newItem) {
             }
         }
     } else {
-        const title = points[0].split('.')[0];
-        const quad = points[0].split('.')[1];
+        const title = points[0].split('~')[0];
+        const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i].title == title) {
                 points.shift();
@@ -52,7 +52,7 @@ export function getAllTitles(obj, title) {
 
 export function navAndGet(arr, points) {
     if (points.length == 1) {
-        if (points[0].split('.').length == 1) {
+        if (points[0].split('~').length == 1) {
             for (let i = 0; i < arr.length; i++) {
                 if (arr[i].title == points[0]) {
                     const result = getAllTitles(arr[i], arr[i].title);
@@ -61,8 +61,8 @@ export function navAndGet(arr, points) {
             }
         }
     } else {
-        const title = points[0].split('.')[0];
-        const quad = points[0].split('.')[1];
+        const title = points[0].split('~')[0];
+        const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i].title == title) {
                 points.shift();
@@ -74,7 +74,7 @@ export function navAndGet(arr, points) {
 
 export function navAndUpdate(arr, points, newTitle) {
     if (points.length == 1) {
-        if (points[0].split('.').length == 1) {
+        if (points[0].split('~').length == 1) {
             for (let i = 0; i < arr.length; i++) {
                 if (arr[i].title == points[0]) {
                     arr[i].title = newTitle;
@@ -83,8 +83,8 @@ export function navAndUpdate(arr, points, newTitle) {
             }
         }
     } else {
-        const title = points[0].split('.')[0];
-        const quad = points[0].split('.')[1];
+        const title = points[0].split('~')[0];
+        const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i].title == title) {
                 points.shift();
@@ -96,7 +96,7 @@ export function navAndUpdate(arr, points, newTitle) {
 
 export function navAndDelete(arr, points) {
     if (points.length == 1) {
-        if (points[0].split('.').length == 1) {
+        if (points[0].split('~').length == 1) {
             for (let i = 0; i < arr.length; i++) {
                 if (arr[i].title == points[0]) {
                     arr.splice(i,1);
@@ -105,8 +105,8 @@ export function navAndDelete(arr, points) {
             }
         }
     } else {
-        const title = points[0].split('.')[0];
-        const quad = points[0].split('.')[1];
+        const title = points[0].split('~')[0];
+        const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i].title == title) {
                 points.shift();
