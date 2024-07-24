@@ -5,6 +5,7 @@ import { Plus, Save } from 'lucide-react';
 import { Input } from './ui/input';
 import { apiUrl, frontEndUrls } from '@/config';
 import axios from 'axios';
+import CircularSpinner from './CircularSpinner';
 
 const List = (props) => {
 
@@ -32,11 +33,13 @@ const List = (props) => {
 
     const [isAdding, setIsAdding] = useState(false);
     const [newItem, setNewItem] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleAddItem = () => {
         if(!isAdding) {
             setIsAdding(true);
         } else {
+            setIsLoading(true);
             let url = window.location.href;
 
             for(let i=0;i<frontEndUrls.length;i++) {
@@ -74,29 +77,45 @@ const List = (props) => {
                 }
             }).then(res => {
                 console.log(res.data);
-                window.location.reload();
+                setIsLoading(false);
+                setNewItem('');
+                setIsAdding(false);
+                props.setForceReload();
             }).catch(error => {
+                setIsLoading(false);
+                setNewItem('');
+                setIsAdding(false);
                 console.log(error.message);
             })
-
-            setNewItem('');
-            setIsAdding(false);
         }
     }
 
     return (
         <div className="relative min-h-[300px] md:min-h-0 overflow-hidden flex flex-col items-center p-4 border-solid border-[1px] border-gray-500 rounded-lg">
             <p className='font-bold pb-2'>{heading}</p>
-            <div className='flex flex-col gap-2 overflow-y-auto w-full items-center'>
+            <div className='relative flex flex-col gap-2 overflow-y-auto w-full items-center'>
                 {titles && titles.map((title, index) => (
                     <ListItem key={index} index={index} title={title} isAdding={isAdding} />
                 ))}
                 {((!titles) || (titles.length == 0)) && 
                     <>No Items.</>
                 }
+                {isLoading && <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-inherit backdrop-blur-sm z-10"><CircularSpinner Width="30px" StrokeWidth="3"/></div>}
             </div>
             <div className={`absolute bottom-2 left-2 right-2 flex gap-2 items-center justify-end`}>
-                <Input className={`${isAdding ? 'block z-20' : 'hidden'}`} type="text" value={newItem} onChange={(e) => setNewItem(e.target.value)} id="newItem" placeholder="Enter new task."/>
+                <Input 
+                    className={`${isAdding ? 'block z-20' : 'hidden'}`}
+                    type="text"
+                    value={newItem}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            handleAddItem();
+                        }
+                    }}
+                    onChange={(e) => setNewItem(e.target.value)}
+                    id="newItem"
+                    placeholder="Enter new task."
+                />
                 <label onClick={ handleAddItem } className='z-10' htmlFor="newItem"><Button>{isAdding ? <Save className='w-4' /> : <Plus className='w-4'/>}</Button></label>
             </div>
         </div>

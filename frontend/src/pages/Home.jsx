@@ -2,7 +2,7 @@ import List from '@/components/List';
 import NavBar from '@/components/navBar';
 import { apiUrl, frontEndUrls } from '@/config';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
@@ -41,6 +41,8 @@ const Home = () => {
     const navigate = useNavigate();
     const [toDo, setToDo] = useState({});
 
+    const [forceReload, setForceReload] = useReducer(x => x + 1, 0);
+
     useEffect(() => {
         if(path.length > 0) {
             axios.get(apiUrl + 'todo', {
@@ -57,7 +59,7 @@ const Home = () => {
                 console.log(error.message);
             });
         }
-    },[path]);
+    },[path, forceReload]);
 
     useEffect(() => {
         if(token) {
@@ -87,10 +89,10 @@ const Home = () => {
         <div className="w-screen h-screen flex flex-col">
             <NavBar />
             <div className="md:flex-1 p-2 w-[90%] md:w-[80%] lg:w-[70%] m-auto flex flex-col md:grid md:grid-cols-2 lg:grid-cols-2 md:grid-rows-2 lg:grid-rows-2 gap-4 overflow-auto">
-                <List heading={'iu'} titles={toDo.iU} />
-                <List heading={'in'} titles={toDo.iN} />
-                <List heading={'nu'} titles={toDo.nU} />
-                <List heading={'nn'} titles={toDo.nN} />
+                <List heading={'iu'} titles={toDo.iU} setForceReload={setForceReload}/>
+                <List heading={'in'} titles={toDo.iN} setForceReload={setForceReload}/>
+                <List heading={'nu'} titles={toDo.nU} setForceReload={setForceReload}/>
+                <List heading={'nn'} titles={toDo.nN} setForceReload={setForceReload}/>
             </div>
         </div>
     )
