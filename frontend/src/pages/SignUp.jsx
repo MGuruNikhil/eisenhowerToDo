@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom"
 
 export function SignUp() {
 
-    const token = localStorage.getItem("token");
+    const [token, setToken] = useState(localStorage.getItem("token") || '');
 
     const navigate = useNavigate()
 
@@ -30,21 +30,26 @@ export function SignUp() {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        if(token) {
+        if (token != null || token != undefined || token.length > 0) {
             axios.get(apiUrl + 'auth/user', {
                 headers: {
                     Authorization: token,
                 }
             }).then(res => {
-                if(res.status == 200) {
+                if (res.status == 200) {
                     console.log(res.data.user);
-                    navigate('/home');
+                    navigate('/');
                 }
             }).catch(error => {
                 console.log(error.message);
-            })
+                localStorage.removeItem('token');
+                setToken('');
+            });
+        } else {
+            localStorage.removeItem('token');
+            setToken('');
         }
-    },[])
+    }, [token]);
 
     const handleSubmit = async (e) => {
         setIsLoading(true);

@@ -3,7 +3,7 @@ import { LogOut } from 'lucide-react';
 import { Button } from './ui/button';
 
 const NavBar = () => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token") || '';
 
     return (
         <div className='w-full flex items-center justify-between px-4 py-2 sticky bg-inherit backdrop-blur-sm z-10'>

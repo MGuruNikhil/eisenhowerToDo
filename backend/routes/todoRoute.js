@@ -110,6 +110,10 @@ router.get("/", passport.authenticate('jwt', { session: false }), async (req, re
             const result = navAndGet(toDo.todo[firstQ], points);
             if(result) {
                 res.status(200).send(result);
+            } else {
+                res.status(404).send({
+                    message: "no such item exist",
+                })
             }
         }
 
