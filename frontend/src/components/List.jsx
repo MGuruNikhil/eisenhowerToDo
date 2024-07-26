@@ -65,6 +65,7 @@ const List = (props) => {
             }
 
             path += props.heading;
+            path = path.replaceAll('_', ' ');
             let text = newItem;
             console.log(path,text);
 
@@ -95,7 +96,7 @@ const List = (props) => {
             <p className='font-bold pb-2'>{heading}</p>
             <div className='relative flex flex-col gap-2 overflow-y-auto w-full items-center'>
                 {titles && titles.map((title, index) => (
-                    <ListItem key={index} index={index} title={title} isAdding={isAdding} />
+                    <ListItem key={index} index={index} title={title} isAdding={isAdding} heading={props.heading} />
                 ))}
                 {((!titles) || (titles.length == 0)) && 
                     <>No Items.</>
