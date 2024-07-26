@@ -4,8 +4,13 @@ export function navAndInsert(arr, points, newItem) {
         const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i].slug == slug) {
+                for(let j = 0; j < arr[i][quad].length; j++) {
+                    if(arr[i][quad][j].slug == newItem.slug) {
+                        return false;
+                    }
+                }
                 arr[i][quad].push(newItem);
-                return;
+                return true;
             }
         }
     } else {

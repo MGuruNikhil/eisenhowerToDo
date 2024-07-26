@@ -54,9 +54,21 @@ router.post("/", passport.authenticate('jwt', { session: false }), async (req, r
         const firstQ = points.shift();
 
         if (!points.length) {
+            for(let i = 0; i < toDo.todo[firstQ].length; i++) {
+                if(toDo.todo[firstQ][i].slug == item.slug) {
+                    return res.status(405).send({
+                        message: "an item already exist with the same slug in this list",
+                    });
+                }
+            }
             toDo.todo[firstQ].push(item);
         } else {
-            navAndInsert(toDo.todo[firstQ], points, item);
+            const isDone = navAndInsert(toDo.todo[firstQ], points, item);
+            if(!isDone) {
+                return res.status(405).send({
+                    message: "an item already exist with the same slug in this list",
+                });
+            }
         }
 
         await toDo.save();
@@ -216,7 +228,7 @@ router.delete("/",passport.authenticate('jwt', { session: false }), async (req, 
         } else {
             navAndDelete(toDo.todo[firstQ], points, index);
         }
-        
+
         toDo.markModified("todo");
         await toDo.save();
 
