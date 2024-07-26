@@ -1,18 +1,18 @@
 export function navAndInsert(arr, points, newItem) {
     if (points.length == 1) {
-        const title = points[0].split('~')[0];
+        const slug = points[0].split('~')[0];
         const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
-            if (arr[i].title == title) {
+            if (arr[i].slug == slug) {
                 arr[i][quad].push(newItem);
                 return;
             }
         }
     } else {
-        const title = points[0].split('~')[0];
+        const slug = points[0].split('~')[0];
         const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
-            if (arr[i].title == title) {
+            if (arr[i].slug == slug) {
                 points.shift();
                 return navAndInsert(arr[i][quad], points, newItem);
             }
@@ -20,7 +20,7 @@ export function navAndInsert(arr, points, newItem) {
     }
 }
 
-export function getAllTitles(obj, title) {
+export function getAllTitles(obj) {
     const iU = [];
     for (let i = 0; i < obj.iu.length; i++) {
         iU.push(obj.iu[i].title);
@@ -42,7 +42,8 @@ export function getAllTitles(obj, title) {
     }
 
     return {
-        title: title,
+        title: obj.title || 'home',
+        slug: obj.slug || 'home',
         iU: iU,
         iN: iN,
         nU: nU,
@@ -55,17 +56,17 @@ export function navAndGet(arr, points) {
         if (points.length == 1) {
             if (points[0].split('~').length == 1) {
                 for (let i = 0; i < arr.length; i++) {
-                    if (arr[i].title == points[0]) {
-                        const result = getAllTitles(arr[i], arr[i].title);
+                    if (arr[i].slug == points[0]) {
+                        const result = getAllTitles(arr[i]);
                         return result;
                     }
                 }
             }
         } else {
-            const title = points[0].split('~')[0];
+            const slug = points[0].split('~')[0];
             const quad = points[0].split('~')[1];
             for (let i = 0; i < arr.length; i++) {
-                if (arr[i].title == title) {
+                if (arr[i].slug == slug) {
                     points.shift();
                     return navAndGet(arr[i][quad], points);
                 }
@@ -74,45 +75,48 @@ export function navAndGet(arr, points) {
     }
 }
 
-export function navAndUpdate(arr, points, newTitle) {
+export function navAndUpdate(arr, points, index, newTitle, newSlug) {
     if (points.length == 1) {
-        if (points[0].split('~').length == 1) {
-            for (let i = 0; i < arr.length; i++) {
-                if (arr[i].title == points[0]) {
-                    arr[i].title = newTitle;
-                    return;
-                }
+        const slug = points[0].split('~')[0];
+        const quad = points[0].split('~')[1];
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].slug == slug) {
+                console.log(arr[i][quad][index].title);
+                arr[i][quad][index].title = newTitle;
+                console.log(arr[i][quad][index].title);
+                arr[i][quad][index].slug = newSlug;
+                return;
             }
         }
     } else {
-        const title = points[0].split('~')[0];
+        const slug = points[0].split('~')[0];
         const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
-            if (arr[i].title == title) {
+            if (arr[i].slug == slug) {
                 points.shift();
-                return navAndUpdate(arr[i][quad], points, newTitle);
+                return navAndInsert(arr[i][quad], points, index, newTitle, newSlug);
             }
         }
     }
 }
 
-export function navAndDelete(arr, points) {
+export function navAndDelete(arr, points, index) {
     if (points.length == 1) {
-        if (points[0].split('~').length == 1) {
-            for (let i = 0; i < arr.length; i++) {
-                if (arr[i].title == points[0]) {
-                    arr.splice(i,1);
-                    return;
-                }
+        const slug = points[0].split('~')[0];
+        const quad = points[0].split('~')[1];
+        for (let i = 0; i < arr.length; i++) {
+            if (arr[i].slug == slug) {
+                arr[i][quad].splice(index,1);
+                return;
             }
         }
     } else {
-        const title = points[0].split('~')[0];
+        const slug = points[0].split('~')[0];
         const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
-            if (arr[i].title == title) {
+            if (arr[i].slug == slug) {
                 points.shift();
-                return navAndDelete(arr[i][quad], points);
+                return navAndInsert(arr[i][quad], points, index);
             }
         }
     }

@@ -1,5 +1,6 @@
 import express from "express";
 import passport from "passport";
+import slugify from "slugify";
 import { ToDo } from "../model/todoModel.js";
 import { getAllTitles, navAndDelete, navAndGet, navAndInsert, navAndUpdate } from "../allJsFun.js";
 
@@ -10,15 +11,17 @@ router.post("/", passport.authenticate('jwt', { session: false }), async (req, r
         let { path, text } = req.body;
         const currentUser = req.user;
         const userId = currentUser._id;
-
+        
         if (!path || !text) {
             return res.status(400).send({
                 message: "Send all the required data (path, text)",
             });
         }
+        const slug = slugify(text);
 
         const item = {
             title: text,
+            slug: slug,
             iu: [],
             in: [],
             nu: [],
@@ -94,7 +97,7 @@ router.get("/", passport.authenticate('jwt', { session: false }), async (req, re
         }
 
         if (path == "home") {
-            const result = getAllTitles(toDo.todo, "Home");
+            let result = getAllTitles(toDo.todo);
             return res.status(200).send(result);
         }
 
@@ -128,15 +131,16 @@ router.get("/", passport.authenticate('jwt', { session: false }), async (req, re
 
 router.put("/",passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        let { path, text } = req.body;
+        let { path, index, text } = req.body;
         const currentUser = req.user;
         const userId = currentUser._id;
 
-        if (!path || !text) {
+        if (!path || !index || !text) {
             return res.status(400).send({
-                message: "Send all the required data (path, text)",
+                message: "Send all the required data (path, index, text)",
             });
         }
+        const slug = slugify(text);
 
         const filter = { userId: userId };
 
@@ -152,8 +156,14 @@ router.put("/",passport.authenticate('jwt', { session: false }), async (req, res
 
         const firstQ = points.shift();
 
-        navAndUpdate(toDo.todo[firstQ], points, text);
+        if(!points.length) {
+            toDo.todo[firstQ][index].title = text;
+            toDo.todo[firstQ][index].slug = slug;
+        } else {
+            navAndUpdate(toDo.todo[firstQ], points, index, text, slug);
+        }
 
+        toDo.markModified("todo");
         await toDo.save();
 
         return res.status(201).send({
@@ -170,13 +180,13 @@ router.put("/",passport.authenticate('jwt', { session: false }), async (req, res
 
 router.delete("/",passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
-        let { path } = req.body;
+        let { path, index } = req.body;
         const currentUser = req.user;
         const userId = currentUser._id;
 
-        if (!path) {
+        if (!path || !index) {
             return res.status(400).send({
-                message: "Send all the required data (path)",
+                message: "Send all the required data (path, index)",
             });
         }
 
@@ -201,8 +211,13 @@ router.delete("/",passport.authenticate('jwt', { session: false }), async (req, 
 
         const firstQ = points.shift();
 
-        navAndDelete(toDo.todo[firstQ], points);
-
+        if(!points.length) {
+            toDo.todo[firstQ].splice(index,1);
+        } else {
+            navAndDelete(toDo.todo[firstQ], points, index);
+        }
+        
+        toDo.markModified("todo");
         await toDo.save();
 
         return res.status(201).send({

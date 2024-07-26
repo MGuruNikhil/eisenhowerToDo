@@ -4,6 +4,7 @@ export const itemSchema = new mongoose.Schema({
     title: {
         type: String
     },
+    slug: String,
     iu: [],
     in: [],
     nu: [],
