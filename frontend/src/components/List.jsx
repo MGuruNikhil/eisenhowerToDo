@@ -65,7 +65,6 @@ const List = (props) => {
             }
 
             path += props.heading;
-            path = path.replaceAll('_', ' ');
             let text = newItem;
             console.log(path,text);
 
@@ -86,7 +85,10 @@ const List = (props) => {
                 setIsLoading(false);
                 setNewItem('');
                 setIsAdding(false);
-                console.log(error.message);
+                if(error.response.status == 405) {
+                    alert("There is already an item with same slug in this box. Duplicates not allowed.");
+                }
+                console.log(error.response.data.message);
             })
         }
     }

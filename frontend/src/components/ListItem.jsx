@@ -2,15 +2,20 @@ import React from 'react'
 import { Card } from './ui/card'
 import { GripVertical, Pencil, Trash2 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import slugify from 'slugify'
 
 const ListItem = (props) => {
 
     const navigate = useNavigate();
     let location = useLocation();
-    console.log(location);
-    const tail = props.title.replaceAll(' ','_');
+    console.log("we are here : ",location);
+    const slug = slugify(props.title);
     const handleClick = () => {
-        navigate(location.pathname+'/'+props.heading+'/'+tail);
+        if(location.pathname == '/') {
+            navigate(location.pathname+props.heading+'/'+slug);
+        } else {
+            navigate(location.pathname+'/'+props.heading+'/'+slug);
+        }
     }
     
     return (

@@ -51,7 +51,6 @@ const Home = () => {
         }
     }
 
-    path = path.replaceAll('_', ' ');
     console.log("path = ", path);
 
     useEffect(() => {
@@ -135,7 +134,7 @@ const Home = () => {
             <NavBar />
             {(serverError) ? <ServerError /> : (notFound) ? <PageNotFound /> :
                 <div className='md:flex-1 p-2 w-[90%] md:w-[80%] lg:w-[70%] m-auto flex flex-col gap-2'>
-                    <div className={`${theme == 'dark' ? 'bg-[#fafafa] text-[#09090b]': ((theme == 'light') ? 'bg-[#09090b] text-[#fafafa]' : 'bg-gray-500 text-white')} self-center w-fit flex items-center justify-center rounded-lg p-4`}>{toDo.title}</div>
+                    <div className={`${theme == 'dark' ? 'bg-[#fafafa] text-[#09090b]': ((theme == 'light') ? 'bg-[#09090b] text-[#fafafa]' : 'bg-gray-500 text-white')} self-center w-fit flex items-center justify-center rounded-lg px-4 py-2`}>{toDo.title}</div>
                     <div className="md:flex-1 flex flex-col md:grid md:grid-cols-2 lg:grid-cols-2 md:grid-rows-2 lg:grid-rows-2 gap-4 overflow-auto">
                         <List heading={'iu'} titles={toDo.iU} setForceReload={setForceReload} />
                         <List heading={'in'} titles={toDo.iN} setForceReload={setForceReload} />
