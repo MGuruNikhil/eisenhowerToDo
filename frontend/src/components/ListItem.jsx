@@ -3,18 +3,20 @@ import { Card } from './ui/card'
 import { GripVertical, Pencil, Trash2 } from 'lucide-react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import slugify from 'slugify'
-import { stringify } from 'postcss'
+import axios from 'axios'
+import { apiUrl } from '@/config'
 
 const ListItem = (props) => {
 
+    const token = (localStorage.getItem("token") || '');
     const navigate = useNavigate();
-    let location = useLocation();
+    let url = useLocation().pathname;
     const slug = slugify(props.title);
     const handleClick = () => {
-        if(location.pathname == '/') {
-            navigate(location.pathname+props.heading+'/'+slug);
+        if(url == '/') {
+            navigate(url+props.heading+'/'+slug);
         } else {
-            navigate(location.pathname+'/'+props.heading+'/'+slug);
+            navigate(url+'/'+props.heading+'/'+slug);
         }
     }
 
@@ -27,13 +29,53 @@ const ListItem = (props) => {
             props.handleAddItem();
         }
     }
+
+    const handleDelete = () => {
+        props.setIsLoading(true);
+
+        let points = url.split('/').filter(str => str !== '');        
+        let path = '';
+    
+        if(points.length != 0) {
+            if(points.length % 2 == 0) {
+                for(let i=0;i<points.length;i++) {
+                    path += points[i];
+                    if(i%2==0) {
+                        path += '/';
+                    } else {
+                        path += '~';
+                    }
+                }
+            }
+        }
+
+        path += props.heading;
+        let index = props.index.toString();
+
+        axios.delete(apiUrl + 'todo', {
+            headers: {
+                Authorization: token,
+            },
+            data: {
+                path,
+                index,
+            }
+        }).then(res => {
+            console.log(res.data);
+            props.setIsLoading(false);
+            props.setForceReload();
+        }).catch(error => {
+            props.setIsLoading(false);
+            console.log(error.response.data.message);
+        });
+    }
     
     return (
         <Card className={`${props.isAdding ? 'hover:z-10' : 'hover:z-20'} p-2 flex gap-2 w-[90%] z-10`}>
             <GripVertical className='opacity-50 w-4 hover:opacity-100 cursor-grab'/>
             <p onClick={ handleClick } className='flex-1 cursor-pointer'>{props.title}</p>
             <Pencil onClick={ handleEdit } className='opacity-50 w-4 hover:opacity-100 cursor-pointer'/>
-            <Trash2 className='opacity-50 w-4 hover:opacity-100 cursor-pointer'/>
+            <Trash2 onClick={ handleDelete } className='opacity-50 w-4 hover:opacity-100 cursor-pointer'/>
         </Card>
     )
 }

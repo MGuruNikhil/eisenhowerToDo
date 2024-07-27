@@ -3,13 +3,13 @@ import ListItem from './ListItem';
 import { Button } from './ui/button';
 import { Plus, Save } from 'lucide-react';
 import { Input } from './ui/input';
-import { apiUrl, frontEndUrls } from '@/config';
+import { apiUrl } from '@/config';
 import axios from 'axios';
 import CircularSpinner from './CircularSpinner';
 
 const List = (props) => {
 
-    const token = localStorage.getItem("token");
+    const token = (localStorage.getItem("token") || '');
     let heading = '';
     let titles = props.titles;
 
@@ -43,11 +43,8 @@ const List = (props) => {
             setIsAdding(true);
         } else {
             setIsLoading(true);
-            let url = window.location.href;
 
-            for(let i=0;i<frontEndUrls.length;i++) {
-                url = url.replace(frontEndUrls[i], '');
-            }
+            const url = useLocation().pathname;
             
             let points = url.split('/').filter(str => str !== '');        
             let path = '';
@@ -69,7 +66,6 @@ const List = (props) => {
             let text = newItem;
 
             if(isEditing) {
-                console.log("hello 1 time");
                 if(oldText == text) {
                     setIsLoading(false);
                     setNewItem('');
@@ -79,7 +75,6 @@ const List = (props) => {
                     setOldText("");
                     return;
                 }
-                console.log("hello 2 times");
                 const index = editIndex;
                 axios.put(apiUrl + 'todo', {
                     path,
@@ -141,12 +136,12 @@ const List = (props) => {
             <p className='font-bold pb-2'>{heading}</p>
             <div className='relative flex flex-col gap-2 overflow-y-auto w-full items-center'>
                 {titles && titles.map((title, index) => (
-                    <ListItem key={index} index={index} title={title} isAdding={isAdding} heading={props.heading} setIsEditing={setIsEditing} setEditIndex={setEditIndex} handleAddItem={handleAddItem} setNewItem={setNewItem} setOldText={setOldText} />
+                    <ListItem key={index} index={index} title={title} isAdding={isAdding} heading={props.heading} setIsEditing={setIsEditing} setEditIndex={setEditIndex} handleAddItem={handleAddItem} setNewItem={setNewItem} setOldText={setOldText} setForceReload={props.setForceReload} setIsLoading={setIsLoading}/>
                 ))}
                 {((!titles) || (titles.length == 0)) && 
                     <>No Items.</>
                 }
-                {isLoading && <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-inherit backdrop-blur-sm z-10"><CircularSpinner Width="30px" StrokeWidth="3"/></div>}
+                {isLoading && <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-inherit backdrop-blur-sm z-50"><CircularSpinner Width="30px" StrokeWidth="3"/></div>}
             </div>
             <div className={`absolute bottom-2 left-2 right-2 flex gap-2 items-center justify-end`}>
                 <Input 

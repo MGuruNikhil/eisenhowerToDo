@@ -1,9 +1,9 @@
 import List from '@/components/List';
 import NavBar from '@/components/navBar';
-import { apiUrl, frontEndUrls } from '@/config';
+import { apiUrl } from '@/config';
 import axios from 'axios';
 import React, { useEffect, useReducer, useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ServerError from './ServerError';
 import PageNotFound from './PageNotFound';
 import { useTheme } from '@/contexts/theme-provider';
@@ -22,11 +22,7 @@ const Home = () => {
 
     const { theme } = useTheme();
 
-    let url = window.location.href;
-
-    for (let i = 0; i < frontEndUrls.length; i++) {
-        url = url.replace(frontEndUrls[i], '');
-    }
+    const url = useLocation().pathname;
 
     let points = url.split('/').filter(str => str !== '');
     let path = '';
