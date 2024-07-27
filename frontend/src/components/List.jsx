@@ -32,6 +32,9 @@ const List = (props) => {
     }
 
     const [isAdding, setIsAdding] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editIndex, setEditIndex] = useState("");
+    const [oldText, setOldText] = useState("");
     const [newItem, setNewItem] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
@@ -46,9 +49,7 @@ const List = (props) => {
                 url = url.replace(frontEndUrls[i], '');
             }
             
-            let points = url.split('/').filter(str => str !== '');
-            console.log(points);
-        
+            let points = url.split('/').filter(str => str !== '');        
             let path = '';
         
             if(points.length != 0) {
@@ -66,30 +67,72 @@ const List = (props) => {
 
             path += props.heading;
             let text = newItem;
-            console.log(path,text);
 
-            axios.post(apiUrl + 'todo', {
-                path,
-                text,
-            }, {
-                headers: {
-                    Authorization: token,
+            if(isEditing) {
+                console.log("hello 1 time");
+                if(oldText == text) {
+                    setIsLoading(false);
+                    setNewItem('');
+                    setIsAdding(false);
+                    setIsEditing(false);
+                    setEditIndex("");
+                    setOldText("");
+                    return;
                 }
-            }).then(res => {
-                console.log(res.data);
-                setIsLoading(false);
-                setNewItem('');
-                setIsAdding(false);
-                props.setForceReload();
-            }).catch(error => {
-                setIsLoading(false);
-                setNewItem('');
-                setIsAdding(false);
-                if(error.response.status == 405) {
-                    alert("There is already an item with same slug in this box. Duplicates not allowed.");
-                }
-                console.log(error.response.data.message);
-            })
+                console.log("hello 2 times");
+                const index = editIndex;
+                axios.put(apiUrl + 'todo', {
+                    path,
+                    index,
+                    text,
+                }, {
+                    headers: {
+                        Authorization: token,
+                    }
+                }).then(res => {
+                    console.log(res.data);
+                    setIsLoading(false);
+                    setNewItem('');
+                    setIsAdding(false);
+                    setIsEditing(false);
+                    setEditIndex("");
+                    setOldText("");
+                    props.setForceReload();
+                }).catch(error => {
+                    setIsLoading(false);
+                    setNewItem('');
+                    setIsAdding(false);
+                    setIsEditing(false);
+                    setEditIndex("");
+                    setOldText("");
+                    if(error.response.status == 405) {
+                        alert("There is already an item with same slug in this box. Duplicates not allowed.");
+                    }
+                    console.log(error.response.data.message);
+                });
+            } else {
+                axios.post(apiUrl + 'todo', {
+                    path,
+                    text,
+                }, {
+                    headers: {
+                        Authorization: token,
+                    }
+                }).then(res => {
+                    setIsLoading(false);
+                    setNewItem('');
+                    setIsAdding(false);
+                    props.setForceReload();
+                }).catch(error => {
+                    setIsLoading(false);
+                    setNewItem('');
+                    setIsAdding(false);
+                    if(error.response.status == 405) {
+                        alert("There is already an item with same slug in this box. Duplicates not allowed.");
+                    }
+                    console.log(error.response.data.message);
+                });
+            }
         }
     }
 
@@ -98,7 +141,7 @@ const List = (props) => {
             <p className='font-bold pb-2'>{heading}</p>
             <div className='relative flex flex-col gap-2 overflow-y-auto w-full items-center'>
                 {titles && titles.map((title, index) => (
-                    <ListItem key={index} index={index} title={title} isAdding={isAdding} heading={props.heading} />
+                    <ListItem key={index} index={index} title={title} isAdding={isAdding} heading={props.heading} setIsEditing={setIsEditing} setEditIndex={setEditIndex} handleAddItem={handleAddItem} setNewItem={setNewItem} setOldText={setOldText} />
                 ))}
                 {((!titles) || (titles.length == 0)) && 
                     <>No Items.</>

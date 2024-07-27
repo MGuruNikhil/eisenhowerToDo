@@ -169,10 +169,22 @@ router.put("/",passport.authenticate('jwt', { session: false }), async (req, res
         const firstQ = points.shift();
 
         if(!points.length) {
+            for(let i = 0; i < toDo.todo[firstQ].length; i++) {
+                if(toDo.todo[firstQ][i].slug == slug) {
+                    return res.status(405).send({
+                        message: "an item already exist with the same slug in this list",
+                    });
+                }
+            }
             toDo.todo[firstQ][index].title = text;
             toDo.todo[firstQ][index].slug = slug;
         } else {
-            navAndUpdate(toDo.todo[firstQ], points, index, text, slug);
+            const isDone = navAndUpdate(toDo.todo[firstQ], points, index, text, slug);
+            if(!isDone) {
+                return res.status(405).send({
+                    message: "an item already exist with the same slug in this list",
+                });
+            }
         }
 
         toDo.markModified("todo");

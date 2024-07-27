@@ -29,8 +29,6 @@ const Home = () => {
     }
 
     let points = url.split('/').filter(str => str !== '');
-    console.log(points);
-
     let path = '';
 
     if (points.length == 0) {
@@ -50,8 +48,6 @@ const Home = () => {
             path = path.slice(0, -1);
         }
     }
-
-    console.log("path = ", path);
 
     useEffect(() => {
         if (token != null || token != undefined || token.length > 0) {

@@ -86,11 +86,14 @@ export function navAndUpdate(arr, points, index, newTitle, newSlug) {
         const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i].slug == slug) {
-                console.log(arr[i][quad][index].title);
+                for(let j = 0; j < arr[i][quad].length ; j++) {
+                    if(arr[i][quad][j].slug == newSlug) {
+                        return false;
+                    }
+                }
                 arr[i][quad][index].title = newTitle;
-                console.log(arr[i][quad][index].title);
                 arr[i][quad][index].slug = newSlug;
-                return;
+                return true;
             }
         }
     } else {
