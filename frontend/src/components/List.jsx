@@ -6,12 +6,14 @@ import { Input } from './ui/input';
 import { apiUrl } from '@/config';
 import axios from 'axios';
 import CircularSpinner from './CircularSpinner';
+import { Badge } from './ui/badge';
 
 const List = (props) => {
 
     const token = (localStorage.getItem("token") || '');
     let heading = '';
     let titles = props.titles;
+    console.log(titles.length);
 
     switch(props.heading) {
         case 'iu':
@@ -133,7 +135,10 @@ const List = (props) => {
 
     return (
         <div className="relative min-h-[300px] md:min-h-0 overflow-hidden flex flex-col items-center p-4 border-solid border-[1px] border-gray-500 rounded-lg">
-            <p className='font-bold pb-2'>{heading}</p>
+            <div className='flex items-center justify-center text-center gap-2 pb-2'>
+                <p className='font-bold'>{heading}</p>
+                <Badge>{titles.length}</Badge>
+            </div>
             <div className='relative flex flex-col gap-2 overflow-y-auto w-full items-center'>
                 {titles && titles.map((title, index) => (
                     <ListItem key={index} index={index} title={title} isAdding={isAdding} heading={props.heading} setIsEditing={setIsEditing} setEditIndex={setEditIndex} handleAddItem={handleAddItem} setNewItem={setNewItem} setOldText={setOldText} setForceReload={props.setForceReload} setIsLoading={setIsLoading}/>
