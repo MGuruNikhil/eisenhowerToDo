@@ -13,7 +13,6 @@ const List = (props) => {
     const token = (localStorage.getItem("token") || '');
     let heading = '';
     let titles = props.titles;
-    console.log(titles.length);
 
     switch(props.heading) {
         case 'iu':
@@ -137,7 +136,7 @@ const List = (props) => {
         <div className="relative min-h-[300px] md:min-h-0 overflow-hidden flex flex-col items-center p-4 border-solid border-[1px] border-gray-500 rounded-lg">
             <div className='flex items-center justify-center text-center gap-2 pb-2'>
                 <p className='font-bold'>{heading}</p>
-                <Badge>{titles.length}</Badge>
+                <Badge>{titles ? titles.length : 0}</Badge>
             </div>
             <div className='relative flex flex-col gap-2 overflow-y-auto w-full items-center'>
                 {titles && titles.map((title, index) => (
