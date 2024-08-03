@@ -7,6 +7,7 @@ import { apiUrl } from '@/config';
 import axios from 'axios';
 import CircularSpinner from './CircularSpinner';
 import { Badge } from './ui/badge';
+import { useLocation } from 'react-router-dom';
 
 const List = (props) => {
 
@@ -38,15 +39,13 @@ const List = (props) => {
     const [oldText, setOldText] = useState("");
     const [newItem, setNewItem] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const url = useLocation().pathname;
 
     const handleAddItem = () => {
         if(!isAdding) {
             setIsAdding(true);
         } else {
             setIsLoading(true);
-
-            const url = useLocation().pathname;
-            
             let points = url.split('/').filter(str => str !== '');        
             let path = '';
         
