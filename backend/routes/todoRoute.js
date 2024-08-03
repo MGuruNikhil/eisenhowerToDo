@@ -78,7 +78,6 @@ router.post("/", passport.authenticate('jwt', { session: false }), async (req, r
         });
 
     } catch (error) {
-        console.log(error.message);
         res.status(500).send({
             message: error.message,
         });
@@ -88,7 +87,6 @@ router.post("/", passport.authenticate('jwt', { session: false }), async (req, r
 router.get("/", passport.authenticate('jwt', { session: false }), async (req, res) => {
     try {
         let { path } = req.query;
-        console.log(path);
         const currentUser = req.user;
         const userId = currentUser._id;
 
@@ -133,7 +131,6 @@ router.get("/", passport.authenticate('jwt', { session: false }), async (req, re
         }
 
     } catch (error) {
-        console.log(error.message);
         res.status(500).send({
             message: error.message,
         });
@@ -195,7 +192,6 @@ router.put("/",passport.authenticate('jwt', { session: false }), async (req, res
         });       
 
     } catch (error) {
-        console.log(error.message);
         res.status(500).send({
             message: error.message,
         });
@@ -249,7 +245,6 @@ router.delete("/",passport.authenticate('jwt', { session: false }), async (req, 
         });
 
     } catch (error) {
-        console.log(error.message);
         res.status(500).send({
             message: error.message,
         });
