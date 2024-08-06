@@ -1,5 +1,6 @@
+import { SystemTheme } from '@/contexts/SystemThemeProvider';
 import { useTheme } from '@/contexts/theme-provider';
-import React from 'react';
+import React, { useContext } from 'react';
 
 const CircularSpinner = ({
     Width = "50px",
@@ -8,11 +9,12 @@ const CircularSpinner = ({
     CapShape = "round"
 }) => {
 
-    const { theme } = useTheme()
+    const { theme } = useTheme();
+    const { isDark } = useContext(SystemTheme);
     const CapShapes = ['round', 'square'];
 
     const CircleDefaultStyling = {
-        stroke: StrokeHex || (theme == 'dark' ? '#fafafa' : (theme == 'light' ? '#18181b' : '#71717a')),
+        stroke: StrokeHex || (theme == 'dark' ? '#fafafa' : (theme == 'light' ? '#18181b' : (isDark ? '#fafafa' : '#18181b'))),
         strokeWidth: StrokeWidth || '4',
         strokeLinecap: ((CapShape && CapShapes.includes(CapShape)) && CapShape) || 'round',
         animation: 'dash 1.5s ease-in-out infinite'
