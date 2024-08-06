@@ -3,7 +3,7 @@ import NavBar from '@/components/navBar';
 import { apiUrl } from '@/config';
 import axios from 'axios';
 import React, { useEffect, useReducer, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ServerError from './ServerError';
 import PageNotFound from './PageNotFound';
 import { useTheme } from '@/contexts/theme-provider';
@@ -150,13 +150,13 @@ const Home = () => {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                                <Link to="/">Home</Link>
                             </BreadcrumbItem>
                             {bread && bread.map((item, index) => (
                                 <React.Fragment key={index}>
                                     <BreadcrumbSeparator />
                                     <BreadcrumbItem>
-                                        <BreadcrumbLink href={item.path}>{item.title}</BreadcrumbLink>
+                                        <Link to={item.path}>{item.title}</Link>
                                     </BreadcrumbItem>
                                 </React.Fragment>
                             ))}
