@@ -7,6 +7,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import ServerError from './ServerError';
 import PageNotFound from './PageNotFound';
 import { useTheme } from '@/contexts/theme-provider';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 const Home = () => {
 
@@ -25,11 +32,25 @@ const Home = () => {
     const url = useLocation().pathname;
 
     let points = url.split('/').filter(str => str !== '');
+
+    let bread = [];
+
+    let tempPath = '';
+    for(let i=0;i<points.length;i++) {
+        tempPath += '/'+points[i];
+        if(i%2!=0) {
+            bread.push({
+                title: points[i],
+                path: tempPath
+            })
+        }
+    }
+
     let path = '';
 
     if (points.length == 0) {
         path = "home";
-    } else if (points.length == 1 && points[0] == 'home'){
+    } else if (points.length == 1 && points[0] == 'home') {
         path = "home";
     } else {
         if (points.length % 2 == 0) {
@@ -79,7 +100,7 @@ const Home = () => {
                     Authorization: token,
                 }
             }).then(res => {
-                if(res.status == 200) {
+                if (res.status == 200) {
                     setToDo(res.data);
                     setNotFound(false);
                     setServerError(false);
@@ -126,8 +147,23 @@ const Home = () => {
             <NavBar />
             {(serverError) ? <ServerError /> : (notFound) ? <PageNotFound /> :
                 <div className='md:flex-1 p-2 w-[90%] md:w-[80%] lg:w-[70%] m-auto flex flex-col gap-2'>
-                    <div className={`${theme == 'dark' ? 'bg-[#fafafa] text-[#09090b]': ((theme == 'light') ? 'bg-[#09090b] text-[#fafafa]' : 'bg-gray-500 text-white')} self-center w-fit flex items-center justify-center rounded-lg px-4 py-2`}>{toDo.title}</div>
-                    <div className="md:flex-1 flex flex-col md:grid md:grid-cols-2 lg:grid-cols-2 md:grid-rows-2 lg:grid-rows-2 gap-4 overflow-auto md:max-h-[calc(100vh-120px)]">
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            {bread && bread.map((item, index) => (
+                                <React.Fragment key={index}>
+                                    <BreadcrumbSeparator />
+                                    <BreadcrumbItem>
+                                        <BreadcrumbLink href={item.path}>{item.title}</BreadcrumbLink>
+                                    </BreadcrumbItem>
+                                </React.Fragment>
+                            ))}
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                    <div className={`${theme == 'dark' ? 'bg-[#fafafa] text-[#09090b]' : ((theme == 'light') ? 'bg-[#09090b] text-[#fafafa]' : 'bg-gray-500 text-white')} self-center w-fit flex items-center justify-center rounded-lg px-4 py-2 md:fixed md:top-2 md:z-10`}>{toDo.title}</div>
+                    <div className="md:flex-1 flex flex-col md:grid md:grid-cols-2 lg:grid-cols-2 md:grid-rows-2 lg:grid-rows-2 gap-4 overflow-auto md:max-h-[calc(100vh-100px)]">
                         <List heading={'iu'} titles={toDo.iU} setForceReload={setForceReload} />
                         <List heading={'in'} titles={toDo.iN} setForceReload={setForceReload} />
                         <List heading={'nu'} titles={toDo.nU} setForceReload={setForceReload} />

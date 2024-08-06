@@ -14,12 +14,14 @@ const app = express();
 // Middleware for parsing request body
 app.use(express.json());
 
-// CORS Configuration
+// CORS Configuration for deployment
 app.use(cors({
-    origin: 'https://eisenhower-todo.vercel.app', // Only allow this origin
+    origin: 'https://eisenhower-todo.vercel.app',
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
 }));
+
+//localhost
 // app.use(cors());
 
 app.use(passport.initialize());

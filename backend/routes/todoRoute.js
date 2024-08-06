@@ -71,6 +71,7 @@ router.post("/", passport.authenticate('jwt', { session: false }), async (req, r
             }
         }
 
+        toDo.markModified("todo");
         await toDo.save();
 
         return res.status(201).send({
