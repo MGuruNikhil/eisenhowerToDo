@@ -24,7 +24,7 @@ const CircularSpinner = ({
     }
 
     return (
-        <div className=''>
+        <div className='absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center  bg-inherit backdrop-blur-sm z-50'>
             <svg style={ SpinnerStyling } className={`animate-spin z-10`} viewBox="0 0 50 50">
                 <circle className={`fill-none`}
                     cx="25"

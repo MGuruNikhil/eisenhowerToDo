@@ -112,7 +112,7 @@ export function SignUp() {
                         <Button type='submit'>Sign Up</Button>
                     </CardFooter>
                     </form>
-                    {isLoading && <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center  bg-inherit backdrop-blur-sm z-10"><CircularSpinner Width="30px" StrokeWidth="3"/></div>}
+                    {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
                 </Card>
             </div>
         </div>

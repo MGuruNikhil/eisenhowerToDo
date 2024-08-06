@@ -10,13 +10,13 @@ import { useTheme } from '@/contexts/theme-provider';
 import {
     Breadcrumb,
     BreadcrumbItem,
-    BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import CircularSpinner from '@/components/CircularSpinner';
 
 const Home = () => {
-
+    const [isLoading, setIsLoading] = useState(false);
     const token = (localStorage.getItem("token") || '');
 
     const navigate = useNavigate();
@@ -92,6 +92,7 @@ const Home = () => {
 
     useEffect(() => {
         if (path.length > 0) {
+            setIsLoading(true);
             axios.get(apiUrl + 'todo', {
                 params: {
                     path,
@@ -104,9 +105,11 @@ const Home = () => {
                     setToDo(res.data);
                     setNotFound(false);
                     setServerError(false);
+                    setIsLoading(false);
                 } else {
                     setNotFound(false);
                     setServerError(true);
+                    setIsLoading(false);
                 }
             }).catch(error => {
                 console.log(error.response.data.message);
@@ -135,18 +138,18 @@ const Home = () => {
                         setServerError(true);
                         break;
                 }
+                setIsLoading(false);
             });
         } else {
             setNotFound(true);
         }
     }, [path, forceReload]);
 
-
     return (
         <div className="w-screen h-screen flex flex-col">
             <NavBar />
             {(serverError) ? <ServerError /> : (notFound) ? <PageNotFound /> :
-                <div className='md:flex-1 p-2 w-[90%] md:w-[80%] lg:w-[70%] m-auto flex flex-col gap-2'>
+                <div className='relative md:flex-1 p-2 w-[90%] md:w-[80%] lg:w-[70%] m-auto flex flex-col gap-2'>
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
@@ -169,6 +172,7 @@ const Home = () => {
                         <List heading={'nu'} titles={toDo.nU} setForceReload={setForceReload} />
                         <List heading={'nn'} titles={toDo.nN} setForceReload={setForceReload} />
                     </div>
+                    {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
                 </div>
             }
         </div>

@@ -137,14 +137,14 @@ const List = (props) => {
                 <p className='font-bold'>{heading}</p>
                 <Badge>{titles ? titles.length : 0}</Badge>
             </div>
-            <div className='relative flex flex-col gap-2 overflow-y-auto w-full items-center'>
+            <div className='relative flex flex-col gap-2 overflow-y-auto w-full items-center flex-1'>
                 {titles && titles.map((title, index) => (
                     <ListItem key={index} index={index} title={title} isAdding={isAdding} heading={props.heading} setIsEditing={setIsEditing} setEditIndex={setEditIndex} handleAddItem={handleAddItem} setNewItem={setNewItem} setOldText={setOldText} setForceReload={props.setForceReload} setIsLoading={setIsLoading}/>
                 ))}
                 {((!titles) || (titles.length == 0)) && 
                     <>No Items.</>
                 }
-                {isLoading && <div className="absolute top-0 bottom-0 left-0 right-0 flex items-center justify-center bg-inherit backdrop-blur-sm z-50"><CircularSpinner Width="30px" StrokeWidth="3"/></div>}
+                {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
             </div>
             <div className={`absolute bottom-2 left-2 right-2 flex gap-2 items-center justify-end`}>
                 <Input 
