@@ -103,7 +103,7 @@ export function SignUp() {
                             </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                                <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} type="password" id="confirmPassword" placeholder="Confirm Password" />
+                                <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(e); }} type="password" id="confirmPassword" placeholder="Confirm Password" />
                             </div>
                         </div>
                     </CardContent>

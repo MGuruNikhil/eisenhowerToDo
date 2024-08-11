@@ -45,6 +45,9 @@ frontend/
     npm install
     ```
 
+3. Change the configuration:
+    In `src/config.js`, comment out the 1st ine and uncomment the 2nd line before starting the development server
+
 ### Running the Development Server
 
 Start the development server:

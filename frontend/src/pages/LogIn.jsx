@@ -83,7 +83,7 @@ export function LogIn() {
                                 </div>
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="password">Password</Label>
-                                    <Input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="password" placeholder="Password" />
+                                    <Input value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(e); }} type="password" id="password" placeholder="Password" />
                                 </div>
                             </div>
                         </CardContent>

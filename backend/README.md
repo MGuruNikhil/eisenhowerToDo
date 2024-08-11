@@ -48,6 +48,9 @@ backend/
     SECRET=your_jwt_secret
     ```
 
+4. Change the configuration:
+    In `app.js`, comment out 18-22 lines and uncomment the 25th line before starting the development server
+
 ### Running the Server
 
 Start the server:

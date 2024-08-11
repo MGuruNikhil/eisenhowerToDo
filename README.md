@@ -73,6 +73,12 @@ This project is a full-stack application for managing tasks using the Eisenhower
     SECRET=your_jwt_secret
     ```
 
+4. Change the configuration:
+    In `frontend/src/config.js`, comment out the 1st ine and uncomment the 2nd line before starting the development server
+
+5. Change the configuration:
+    In `backend/app.js`, comment out 18-22 lines and uncomment the 25th line before starting the development server
+
 ### Running the Application
 
 1. Start the backend server:
