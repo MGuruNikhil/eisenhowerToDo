@@ -1,16 +1,94 @@
-# eisenhowerToDo
+# Eisenhower Todo
 
-Introducing a productivity website designed to optimize your task management using the Eisenhower Matrix. This platform categorizes your to-do tasks into four distinct types:
+This project is a full-stack application for managing tasks using the Eisenhower Matrix. It consists of a frontend built with React and a backend built with Node.js and Express.
 
-1. Important and Urgent
-2. Important and Not Urgent
-3. Not Important and Urgent
-4. Not Important and Not Urgent
+## Project Structure
 
-Key Features:
+```bash
+.
+├── .gitignore
+├── backend
+│   ├── .env
+│   ├── allJsFun.js
+│   ├── app.js
+│   ├── config.js
+│   ├── index.js
+│   ├── model
+│   │   ├── todoModel.js
+│   │   └── userModel.js
+│   ├── package.json
+│   ├── routes
+│   │   ├── authRoute.js
+│   │   └── todoRoute.js
+│   └── vercel.json
+├── frontend
+│   ├── components.json
+│   ├── index.html
+│   ├── jsconfig.json
+│   ├── package.json
+│   ├── postcss.config.js
+│   ├── public
+│   ├── src
+│   │   ├── App.jsx
+│   │   ├── assets
+│   │   ├── components
+│   │   ├── config.js
+│   │   ├── contexts
+│   │   ├── index.css
+│   │   ├── lib
+│   │   ├── main.jsx
+│   │   └── pages
+│   ├── tailwind.config.js
+│   └── vite.config.js
+└── README.md
+```
 
-- **Nested Subtasks**: Each task can contain an individual list of subtasks, which can also have their own subtasks, allowing for infinite depth.
-- **CRUD Operations**: Easily create, read, update, and delete tasks and subtasks.
-- **Drag-and-Drop Functionality**: Reorder tasks within a list by dragging and dropping them. You can also move tasks between different quadrants of the matrix.
+## Getting Started
 
-This comprehensive task management tool helps you prioritize and organize your tasks more effectively, enhancing your productivity.
+### Prerequisites
+
+- Node.js
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/yourusername/eisenhowertodo.git
+    cd eisenhowertodo
+    ```
+
+2. Install dependencies for both frontend and backend:
+    ```sh
+    cd backend
+    npm install
+    cd ../frontend
+    npm install
+    ```
+
+3. Create a `.env` file inside backend directory and add your environment variables:
+    ```env
+    MONGO_NAME=your_mongo_username
+    MONGO_PASSWORD=your_mongo_password
+    SECRET=your_jwt_secret
+    ```
+
+### Running the Application
+
+1. Start the backend server:
+    ```sh
+    cd backend
+    npm run dev
+    ```
+
+2. Start the frontend development server:
+    ```sh
+    cd frontend
+    npm run dev
+    ```
+
+3. Open your browser and navigate to `http://localhost:3000`.
+
+## License
+
+This project is licensed under the ISC License.
