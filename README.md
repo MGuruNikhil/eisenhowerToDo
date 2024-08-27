@@ -54,7 +54,7 @@ This project is a full-stack application for managing tasks using the Eisenhower
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/eisenhowertodo.git
+    git clone https://github.com/MGuruNikhil/eisenhowertodo.git
     cd eisenhowertodo
     ```
 

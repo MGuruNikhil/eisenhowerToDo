@@ -5,6 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import slugify from 'slugify'
 import axios from 'axios'
 import { apiUrl } from '@/config'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 
 const ListItem = (props) => {
 
@@ -69,10 +71,17 @@ const ListItem = (props) => {
             console.log(error.response.data.message);
         });
     }
+
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: props.id });
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    };
     
     return (
-        <Card className={`${props.isAdding ? 'hover:z-10' : 'hover:z-20'} p-2 flex gap-2 w-[90%] z-10`}>
-            <GripVertical className='opacity-50 w-4 hover:opacity-100 cursor-grab'/>
+        <Card ref={setNodeRef} style={style} {...attributes} className={`${props.isAdding ? 'hover:z-10' : 'hover:z-20'} p-2 flex gap-2 w-[90%] z-10 touch-none`}>
+            <GripVertical {...listeners} className='opacity-50 w-4 hover:opacity-100 cursor-grab active:cursor-grabbing' />
             <p onClick={ handleClick } className='flex-1 cursor-pointer hover:underline'>{props.title}</p>
             <Pencil onClick={ handleEdit } className='opacity-50 w-4 hover:opacity-100 cursor-pointer'/>
             <Trash2 onClick={ handleDelete } className='opacity-50 w-4 hover:opacity-100 cursor-pointer'/>

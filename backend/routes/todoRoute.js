@@ -251,4 +251,53 @@ router.delete("/",passport.authenticate('jwt', { session: false }), async (req, 
         });
     }
 });
+
+router.put("/moveVertical",passport.authenticate('jwt', { session: false }), async (req, res) => {
+    try {
+        let { path, oldIndex, newIndex } = req.body;
+        const currentUser = req.user;
+        const userId = currentUser._id;
+
+        if (!path || !oldIndex || !newIndex) {
+            return res.status(400).send({
+                message: "Send all the required data (path, oldIndex, newIndex)",
+            });
+        }
+
+        const filter = { userId: userId };
+
+        let toDo = await ToDo.findOne(filter);
+
+        if (!toDo) {
+            return res.status(404).send({
+                message: "Your todo nest not found",
+            });
+        }
+
+        const points = path.split("/");
+
+        const firstQ = points.shift();
+
+        if(!points.length) {
+            const item = toDo.todo[firstQ].splice(oldIndex, 1);
+            toDo.todo[firstQ].splice(newIndex, 0, item[0]);
+        } else {
+            const item = navAndDelete(toDo.todo[firstQ], points, oldIndex);
+            navAndInsert(toDo.todo[firstQ], points, item, newIndex);
+        }
+
+        toDo.markModified("todo");
+        await toDo.save();
+
+        return res.status(201).send({
+            message: "rearranged successfully",
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            message: error.message,
+        });
+    }
+});
+
 export default router;

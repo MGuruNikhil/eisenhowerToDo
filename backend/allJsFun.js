@@ -1,25 +1,52 @@
-export function navAndInsert(arr, points, newItem) {
-    if (points.length == 1) {
-        const slug = points[0].split('~')[0];
-        const quad = points[0].split('~')[1];
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].slug == slug) {
-                for(let j = 0; j < arr[i][quad].length; j++) {
-                    if(arr[i][quad][j].slug == newItem.slug) {
-                        return false;
+export function navAndInsert(arr, points, newItem, index=null) {
+    if (index == null) {
+        if (points.length == 1) {
+            const slug = points[0].split('~')[0];
+            const quad = points[0].split('~')[1];
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].slug == slug) {
+                    for(let j = 0; j < arr[i][quad].length; j++) {
+                        if(arr[i][quad][j].slug == newItem.slug) {
+                            return false;
+                        }
                     }
+                    arr[i][quad].push(newItem);
+                    return true;
                 }
-                arr[i][quad].push(newItem);
-                return true;
+            }
+        } else {
+            const slug = points[0].split('~')[0];
+            const quad = points[0].split('~')[1];
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].slug == slug) {
+                    points.shift();
+                    return navAndInsert(arr[i][quad], points, newItem);
+                }
             }
         }
     } else {
-        const slug = points[0].split('~')[0];
-        const quad = points[0].split('~')[1];
-        for (let i = 0; i < arr.length; i++) {
-            if (arr[i].slug == slug) {
-                points.shift();
-                return navAndInsert(arr[i][quad], points, newItem);
+        if (points.length == 1) {
+            const slug = points[0].split('~')[0];
+            const quad = points[0].split('~')[1];
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].slug == slug) {
+                    for(let j = 0; j < arr[i][quad].length; j++) {
+                        if(arr[i][quad][j].slug == newItem.slug) {
+                            return false;
+                        }
+                    }
+                    arr[i][quad].splice(index, 0, newItem);
+                    return true;
+                }
+            }
+        } else {
+            const slug = points[0].split('~')[0];
+            const quad = points[0].split('~')[1];
+            for (let i = 0; i < arr.length; i++) {
+                if (arr[i].slug == slug) {
+                    points.shift();
+                    return navAndInsert(arr[i][quad], points, newItem, index);
+                }
             }
         }
     }
@@ -114,8 +141,8 @@ export function navAndDelete(arr, points, index) {
         const quad = points[0].split('~')[1];
         for (let i = 0; i < arr.length; i++) {
             if (arr[i].slug == slug) {
-                arr[i][quad].splice(index,1);
-                return;
+                let deletedItem = arr[i][quad].splice(index,1);
+                return deletedItem;
             }
         }
     } else {

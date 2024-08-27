@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ListItem from './ListItem';
 import { Button } from './ui/button';
 import { Plus, Save } from 'lucide-react';
@@ -8,12 +8,22 @@ import axios from 'axios';
 import CircularSpinner from './CircularSpinner';
 import { Badge } from './ui/badge';
 import { useLocation } from 'react-router-dom';
+import { closestCenter, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 
 const List = (props) => {
 
     const token = (localStorage.getItem("token") || '');
     let heading = '';
     let titles = props.titles;
+    const [items, setItems] = useState([]);
+    useEffect(() => {
+        if (titles) {
+            const dndArray = titles.map((title, index) => ({ id: index+1, title }));
+            setItems(dndArray);
+        }
+    }, [titles]);
+    
 
     switch(props.heading) {
         case 'iu':
@@ -131,38 +141,106 @@ const List = (props) => {
         }
     }
 
-    return (
-        <div className="relative min-h-[300px] md:min-h-0 overflow-hidden flex flex-col items-center p-4 border-solid border-[1px] border-gray-500 rounded-lg">
-            <div className='flex items-center justify-center text-center gap-2 pb-2'>
-                <p className='font-bold'>{heading}</p>
-                <Badge>{titles ? titles.length : 0}</Badge>
-            </div>
-            <div className='flex flex-col gap-2 overflow-y-auto w-full items-center flex-1'>
-                {titles && titles.map((title, index) => (
-                    <ListItem key={index} index={index} title={title} isAdding={isAdding} heading={props.heading} setIsEditing={setIsEditing} setEditIndex={setEditIndex} handleAddItem={handleAddItem} setNewItem={setNewItem} setOldText={setOldText} setForceReload={props.setForceReload} setIsLoading={setIsLoading}/>
-                ))}
-                {((!titles) || (titles.length == 0)) && 
-                    <>No Items.</>
-                }
-            </div>
-            <div className={`absolute bottom-2 left-2 right-2 flex gap-2 items-center justify-end`}>
-                <Input 
-                    className={`${isAdding ? 'block z-20' : 'hidden'}`}
-                    type="text"
-                    value={newItem}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                            handleAddItem();
+    const handleDragEnd = (event) => {
+        const { active, over } = event;
+
+        if (active.id !== over.id) {
+            setItems((items) => {
+                setIsLoading(true);
+                let oldIndex = items.findIndex(item => item.id === active.id);
+                let newIndex = items.findIndex(item => item.id === over.id);
+                console.log(oldIndex, newIndex);
+
+                const updatedItems = arrayMove(items, oldIndex, newIndex);
+                console.log(updatedItems);
+
+                let points = url.split('/').filter(str => str !== '');
+                let path = '';
+
+                if(points.length != 0) {
+                    if(points.length % 2 == 0) {
+                        for(let i=0;i<points.length;i++) {
+                            path += points[i];
+                            if(i%2==0) {
+                                path += '/';
+                            } else {
+                                path += '~';
+                            }
                         }
-                    }}
-                    onChange={(e) => setNewItem(e.target.value)}
-                    id="newItem"
-                    placeholder="Enter new task."
-                />
-                <label onClick={ handleAddItem } className='z-10' htmlFor="newItem"><Button>{isAdding ? <Save className='w-4' /> : <Plus className='w-4'/>}</Button></label>
+                    }
+                }
+
+                path += props.heading;
+                oldIndex = oldIndex.toString();
+                newIndex = newIndex.toString();
+
+                axios.put(apiUrl + 'todo/moveVertical', {
+                    path,
+                    oldIndex,
+                    newIndex,
+                }, {
+                    headers: {
+                        Authorization: token,
+                    }
+                }).then(res => {
+                    console.log(res.data);
+                    setIsLoading(false);
+                    // props.setForceReload();
+                }).catch(error => {
+                    setIsLoading(false);
+                    console.log(error.response.data.message);
+                });
+
+                return updatedItems;
+            });
+        }
+    };
+
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(TouchSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter:sortableKeyboardCoordinates,
+        })
+    );
+
+    return (
+        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <div className="relative min-h-[300px] md:min-h-0 overflow-hidden flex flex-col items-center p-4 border-solid border-[1px] border-gray-500 rounded-lg">
+                <div className='flex items-center justify-center text-center gap-2 pb-2'>
+                    <p className='font-bold'>{heading}</p>
+                    <Badge>{titles ? titles.length : 0}</Badge>
+                </div>
+                
+                <div className='flex flex-col gap-2 overflow-y-auto overflow-x-hidden w-full items-center flex-1'>
+                    <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                        {items && items.map((item, index) => (
+                            <ListItem key={index} index={index} id={item.id} title={item.title} isAdding={isAdding} heading={props.heading} setIsEditing={setIsEditing} setEditIndex={setEditIndex} handleAddItem={handleAddItem} setNewItem={setNewItem} setOldText={setOldText} setForceReload={props.setForceReload} setIsLoading={setIsLoading}/>
+                        ))}
+                        {((!items) || (items.length == 0)) && 
+                            <>No Items.</>
+                        }
+                    </SortableContext>
+                </div>
+                <div className={`absolute bottom-2 left-2 right-2 flex gap-2 items-center justify-end`}>
+                    <Input 
+                        className={`${isAdding ? 'block z-20' : 'hidden'}`}
+                        type="text"
+                        value={newItem}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                handleAddItem();
+                            }
+                        }}
+                        onChange={(e) => setNewItem(e.target.value)}
+                        id="newItem"
+                        placeholder="Enter new task."
+                    />
+                    <label onClick={ handleAddItem } className='z-10' htmlFor="newItem"><Button>{isAdding ? <Save className='w-4' /> : <Plus className='w-4'/>}</Button></label>
+                </div>
+                {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
             </div>
-            {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
-        </div>
+        </DndContext>
     )
 }
 
