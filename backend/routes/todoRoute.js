@@ -2,7 +2,7 @@ import express from "express";
 import passport from "passport";
 import slugify from "slugify";
 import { ToDo } from "../model/todoModel.js";
-import { getAllTitles, navAndDelete, navAndGet, navAndInsert, navAndUpdate } from "../allJsFun.js";
+import { getAllTitles, navAndDelete, navAndGet, navAndInsert, navAndMove, navAndUpdate } from "../allJsFun.js";
 
 const router = express.Router();
 
@@ -282,8 +282,7 @@ router.put("/moveVertical",passport.authenticate('jwt', { session: false }), asy
             const item = toDo.todo[firstQ].splice(oldIndex, 1);
             toDo.todo[firstQ].splice(newIndex, 0, item[0]);
         } else {
-            const item = navAndDelete(toDo.todo[firstQ], points, oldIndex);
-            navAndInsert(toDo.todo[firstQ], points, item, newIndex);
+            navAndMove(toDo.todo[firstQ], points, oldIndex, newIndex);
         }
 
         toDo.markModified("todo");

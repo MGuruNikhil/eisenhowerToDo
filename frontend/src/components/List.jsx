@@ -145,53 +145,46 @@ const List = (props) => {
         const { active, over } = event;
 
         if (active.id !== over.id) {
-            setItems((items) => {
-                setIsLoading(true);
-                let oldIndex = items.findIndex(item => item.id === active.id);
-                let newIndex = items.findIndex(item => item.id === over.id);
-                console.log(oldIndex, newIndex);
+            setIsLoading(true);
+            let oldIndex = items.findIndex(item => item.id === active.id);
+            let newIndex = items.findIndex(item => item.id === over.id);
+            console.log(oldIndex, newIndex);
 
-                const updatedItems = arrayMove(items, oldIndex, newIndex);
-                console.log(updatedItems);
+            let points = url.split('/').filter(str => str !== '');
+            let path = '';
 
-                let points = url.split('/').filter(str => str !== '');
-                let path = '';
-
-                if(points.length != 0) {
-                    if(points.length % 2 == 0) {
-                        for(let i=0;i<points.length;i++) {
-                            path += points[i];
-                            if(i%2==0) {
-                                path += '/';
-                            } else {
-                                path += '~';
-                            }
+            if(points.length != 0) {
+                if(points.length % 2 == 0) {
+                    for(let i=0;i<points.length;i++) {
+                        path += points[i];
+                        if(i%2==0) {
+                            path += '/';
+                        } else {
+                            path += '~';
                         }
                     }
                 }
+            }
 
-                path += props.heading;
-                oldIndex = oldIndex.toString();
-                newIndex = newIndex.toString();
+            path += props.heading;
+            oldIndex = oldIndex.toString();
+            newIndex = newIndex.toString();
 
-                axios.put(apiUrl + 'todo/moveVertical', {
-                    path,
-                    oldIndex,
-                    newIndex,
-                }, {
-                    headers: {
-                        Authorization: token,
-                    }
-                }).then(res => {
-                    console.log(res.data);
-                    setIsLoading(false);
-                    // props.setForceReload();
-                }).catch(error => {
-                    setIsLoading(false);
-                    console.log(error.response.data.message);
-                });
-
-                return updatedItems;
+            axios.put(apiUrl + 'todo/moveVertical', {
+                path,
+                oldIndex,
+                newIndex,
+            }, {
+                headers: {
+                    Authorization: token,
+                }
+            }).then(res => {
+                console.log(res.data);
+                setItems(arrayMove(items, oldIndex, newIndex));
+                setIsLoading(false);
+            }).catch(error => {
+                setIsLoading(false);
+                console.log(error.response.data.message);
             });
         }
     };

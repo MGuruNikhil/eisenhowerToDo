@@ -56,7 +56,7 @@ router.post("/login", function (req, res) {
             username: user.username,
             displayName: user.displayName
         }
-        const token = jwt.sign(payload, process.env.SECRET, { expiresIn: "1d" });
+        const token = jwt.sign(payload, process.env.SECRET, { expiresIn: "10d" });
         return res.status(200).send({
             message: "Successfully logged in",
             token: "Bearer " + token
