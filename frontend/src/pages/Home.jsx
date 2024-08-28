@@ -2,11 +2,10 @@ import List from '@/components/List';
 import NavBar from '@/components/navBar';
 import { apiUrl } from '@/config';
 import axios from 'axios';
-import React, { useContext, useEffect, useReducer, useState } from 'react'
+import React, { useEffect, useReducer, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ServerError from './ServerError';
 import PageNotFound from './PageNotFound';
-import { useTheme } from '@/contexts/theme-provider';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -14,7 +13,6 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import CircularSpinner from '@/components/CircularSpinner';
-import { SystemTheme } from '@/contexts/SystemThemeProvider';
 
 const Home = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -27,9 +25,6 @@ const Home = () => {
 
     const [notFound, setNotFound] = useState(false);
     const [serverError, setServerError] = useState(false);
-
-    const { theme } = useTheme();
-    const { isDark } = useContext(SystemTheme);
 
     const url = useLocation().pathname;
 
@@ -161,13 +156,25 @@ const Home = () => {
                                 <React.Fragment key={index}>
                                     <BreadcrumbSeparator />
                                     <BreadcrumbItem>
-                                        <Link className='hover:underline' to={item.path}>{item.title}</Link>
+                                        <Link className={`hover:underline ${bread.length-1 == index ? 'font-bold text-[#fafafa]' : ''}`} to={item.path}>
+                                            {item && item.title ? 
+                                                (item.title.length <= 10 ? item.title : item.title.substring(0, 7) + '...') 
+                                                : 
+                                                ''
+                                            }
+                                        </Link>
                                     </BreadcrumbItem>
                                 </React.Fragment>
                             ))}
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <div className={`${theme == 'dark' ? 'bg-[#fafafa] text-[#09090b]' : ((theme == 'light') ? 'bg-[#09090b] text-[#fafafa]' : (isDark ? 'bg-[#fafafa] text-[#09090b]' : 'bg-[#09090b] text-[#fafafa]'))} self-center w-fit flex items-center justify-center rounded-lg px-4 py-2 md:fixed md:top-2 md:z-10`}>{toDo.title}</div>
+                    <h1 className={`text-center font-black text-xl px-2 py-2 md:fixed md:top-2 md:z-10 md:left-1/2 md:transform md:-translate-x-1/2`}>
+                        {toDo && toDo.title ? 
+                            (toDo.title.length <= 20 ? toDo.title : toDo.title.substring(0, 17) + '...') 
+                            : 
+                            ''
+                        }
+                    </h1>
                     <div className="md:flex-1 flex flex-col md:grid md:grid-cols-2 lg:grid-cols-2 md:grid-rows-2 lg:grid-rows-2 gap-4 overflow-auto md:max-h-[calc(100vh-100px)]">
                         <List heading={'iu'} titles={toDo.iU} setForceReload={setForceReload} />
                         <List heading={'in'} titles={toDo.iN} setForceReload={setForceReload} />

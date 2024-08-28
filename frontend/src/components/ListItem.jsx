@@ -82,7 +82,7 @@ const ListItem = (props) => {
     return (
         <Card ref={setNodeRef} style={style} {...attributes} className={`${props.isAdding ? 'hover:z-10' : 'hover:z-20'} p-2 flex gap-2 w-[90%] z-10 touch-none`}>
             <GripVertical {...listeners} className='opacity-50 w-4 hover:opacity-100 cursor-grab active:cursor-grabbing' />
-            <p onClick={ handleClick } className='flex-1 cursor-pointer hover:underline'>{props.title}</p>
+            <p onClick={ handleClick } className='flex-1 cursor-pointer hover:underline overflow-scroll'>{props.title}</p>
             <Pencil onClick={ handleEdit } className='opacity-50 w-4 hover:opacity-100 cursor-pointer'/>
             <Trash2 onClick={ handleDelete } className='opacity-50 w-4 hover:opacity-100 cursor-pointer'/>
         </Card>
