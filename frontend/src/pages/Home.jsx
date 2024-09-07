@@ -143,7 +143,7 @@ const Home = () => {
     }, [path, forceReload]);
 
     return (
-        <div className="w-screen h-screen flex flex-col">
+        <div className="w-screen h-screen flex flex-col bg-[#d4d4d4] dark:bg-background">
             <NavBar />
             {(serverError) ? <ServerError /> : (notFound) ? <PageNotFound /> :
                 <div className='relative md:flex-1 p-2 w-[90%] md:w-[80%] lg:w-[70%] m-auto flex flex-col gap-2'>
@@ -168,7 +168,7 @@ const Home = () => {
                             ))}
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <h1 className={`text-center font-black text-xl px-2 py-2 md:fixed md:top-2 md:z-10 md:left-1/2 md:transform md:-translate-x-1/2`}>
+                    <h1 className={`text-center font-black text-xl p-2 md:fixed md:top-2 md:z-10 md:left-1/2 md:transform md:-translate-x-1/2`}>
                         {toDo && toDo.title ? 
                             (toDo.title.length <= 20 ? toDo.title : toDo.title.substring(0, 17) + '...') 
                             : 

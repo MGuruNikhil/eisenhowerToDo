@@ -10,6 +10,7 @@ import { Badge } from './ui/badge';
 import { useLocation } from 'react-router-dom';
 import { closestCenter, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import { Card } from './ui/card';
 
 const List = (props) => {
 
@@ -148,8 +149,7 @@ const List = (props) => {
             setIsLoading(true);
             let oldIndex = items.findIndex(item => item.id === active.id);
             let newIndex = items.findIndex(item => item.id === over.id);
-            console.log(oldIndex, newIndex);
-
+            
             let points = url.split('/').filter(str => str !== '');
             let path = '';
 
@@ -199,7 +199,7 @@ const List = (props) => {
 
     return (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-            <div className="relative min-h-[300px] md:min-h-0 overflow-hidden flex flex-col items-center p-4 border-solid border-[1px] border-gray-500 rounded-lg">
+            <Card className="relative min-h-[300px] md:min-h-0 overflow-hidden flex flex-col items-center p-4 bg-[#a3a3a3] dark:bg-background border-[#a3a3a3]">
                 <div className='flex items-center justify-center text-center gap-2 pb-2'>
                     <p className='font-bold'>{heading}</p>
                     <Badge>{titles ? titles.length : 0}</Badge>
@@ -232,7 +232,7 @@ const List = (props) => {
                     <label onClick={ handleAddItem } className='z-10' htmlFor="newItem"><Button>{isAdding ? <Save className='w-4' /> : <Plus className='w-4'/>}</Button></label>
                 </div>
                 {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
-            </div>
+            </Card>
         </DndContext>
     )
 }
