@@ -156,7 +156,7 @@ const Home = () => {
                                 <React.Fragment key={index}>
                                     <BreadcrumbSeparator />
                                     <BreadcrumbItem>
-                                        <Link className={`hover:underline ${bread.length-1 == index ? 'font-bold text-[#fafafa]' : ''}`} to={item.path}>
+                                        <Link className={`hover:underline ${bread.length-1 == index ? 'font-bold text-[#171717] dark:text-[#fafafa]' : ''}`} to={item.path}>
                                             {item && item.title ? 
                                                 (item.title.length <= 10 ? item.title : item.title.substring(0, 7) + '...') 
                                                 : 

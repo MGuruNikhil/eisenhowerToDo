@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { apiUrl } from '../config'
 import CircularSpinner from "@/components/CircularSpinner"
@@ -26,6 +26,8 @@ export function LogIn() {
     const [password, setPassword] = useState("")
 
     const [isLoading, setIsLoading] = useState(false)
+
+    const inputRefs = useRef([])
 
     useEffect(() => {
         if (token != null || token != undefined || token.length > 0) {
@@ -49,6 +51,17 @@ export function LogIn() {
         }
     }, [token]);
 
+    const handleKeyDown = (e, index) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (index < inputRefs.current.length - 1) {
+                inputRefs.current[index + 1].focus();
+            } else {
+                handleSubmit(e);
+            }
+        }
+    };
+
     const handleSubmit = async (e) => {
         setIsLoading(true)
         e.preventDefault()
@@ -66,7 +79,7 @@ export function LogIn() {
     };
 
     return (
-        <div className="w-screen h-screen flex flex-col">
+        <div className="w-screen h-screen flex flex-col bg-[#d4d4d4] dark:bg-background">
             <NavBar />
             <div className="flex-1 flex items-center justify-center">
                 <Card className="w-[350px] relative overflow-hidden">
@@ -79,17 +92,17 @@ export function LogIn() {
                             <div className="grid w-full items-center gap-4">
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="email">Email</Label>
-                                    <Input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" placeholder="Your registered email adderss" />
+                                    <Input value={email} onChange={(e) => setEmail(e.target.value)} ref={(el) => (inputRefs.current[0] = el)} onKeyDown={(e) => handleKeyDown(e, 0)} type="email" id="email" placeholder="Your registered email adderss" />
                                 </div>
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="password">Password</Label>
-                                    <Input value={password} onChange={(e) => setPassword(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(e); }} type="password" id="password" placeholder="Password" />
+                                    <Input value={password} onChange={(e) => setPassword(e.target.value)} ref={(el) => (inputRefs.current[1] = el)} onKeyDown={(e) => handleKeyDown(e, 1)} type="password" id="password" placeholder="Password" />
                                 </div>
                             </div>
                         </CardContent>
                         <CardFooter className="flex justify-between">
-                            <Button onClick={() => navigate('/signup') } variant="outline">Sign Up</Button>
                             <Button type='submit'>Log In</Button>
+                            <Button onClick={() => navigate('/signup') } variant="outline">Sign Up</Button>
                         </CardFooter>
                     </form>
                     {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}

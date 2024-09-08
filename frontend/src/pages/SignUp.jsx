@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { apiUrl } from "@/config"
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 export function SignUp() {
@@ -28,6 +28,7 @@ export function SignUp() {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const [isLoading, setIsLoading] = useState(false);
+    const inputRefs = useRef([]);
 
     useEffect(() => {
         if (token != null || token != undefined || token.length > 0) {
@@ -50,6 +51,17 @@ export function SignUp() {
             setToken('');
         }
     }, [token]);
+
+    const handleKeyDown = (e, index) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            if (index < inputRefs.current.length - 1) {
+                inputRefs.current[index + 1].focus();
+            } else {
+                handleSubmit(e);
+            }
+        }
+    };
 
     const handleSubmit = async (e) => {
         setIsLoading(true);
@@ -78,7 +90,7 @@ export function SignUp() {
     }
 
     return (
-        <div className="w-screen h-screen flex flex-col">
+        <div className="w-screen h-screen flex flex-col bg-[#d4d4d4] dark:bg-background">
             <NavBar />
             <div className="flex-1 flex items-center justify-center">
                 <Card className="w-[350px] relative overflow-hidden">
@@ -91,25 +103,25 @@ export function SignUp() {
                         <div className="grid w-full items-center gap-4">
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="displayName">Name</Label>
-                                <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} type="text" id="displayName" placeholder="Your name" />
+                                <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} ref={(el) => (inputRefs.current[0] = el)} onKeyDown={(e) => handleKeyDown(e, 0)} type="text" id="displayName" placeholder="Your name" />
                             </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="email">Email</Label>
-                                <Input value={email} onChange={(e) => setEmail(e.target.value)} type="email" id="email" placeholder="Your email adderss" />
+                                <Input value={email} onChange={(e) => setEmail(e.target.value)} ref={(el) => (inputRefs.current[1] = el)} onKeyDown={(e) => handleKeyDown(e, 1)} type="email" id="email" placeholder="Your email adderss" />
                             </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="password">Password</Label>
-                                <Input value={password} onChange={(e) => setPassword(e.target.value)} type="password" id="password" placeholder="Password" />
+                                <Input value={password} onChange={(e) => setPassword(e.target.value)} ref={(el) => (inputRefs.current[2] = el)} onKeyDown={(e) => handleKeyDown(e, 2)} type="password" id="password" placeholder="Password" />
                             </div>
                             <div className="flex flex-col space-y-1.5">
                                 <Label htmlFor="confirmPassword">Confirm Password</Label>
-                                <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') handleSubmit(e); }} type="password" id="confirmPassword" placeholder="Confirm Password" />
+                                <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} ref={(el) => (inputRefs.current[3] = el)} onKeyDown={(e) => handleKeyDown(e, 3)} type="password" id="confirmPassword" placeholder="Confirm Password" />
                             </div>
                         </div>
                     </CardContent>
                     <CardFooter className="flex justify-between">
-                        <Button onClick={() => navigate('/login') } variant="outline">Log In</Button>
                         <Button type='submit'>Sign Up</Button>
+                        <Button onClick={() => navigate('/login') } variant="outline">Log In</Button>
                     </CardFooter>
                     </form>
                     {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
