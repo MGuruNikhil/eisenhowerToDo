@@ -69,6 +69,10 @@ const ListItem = (props) => {
         }).catch(error => {
             props.setIsLoading(false);
             console.log(error.response.data.message);
+            if(error.response.status == 401) {
+                localStorage.removeItem('token');
+                navigate('/login');
+            }
         });
     }
 

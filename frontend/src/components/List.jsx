@@ -7,13 +7,14 @@ import { apiUrl } from '@/config';
 import axios from 'axios';
 import CircularSpinner from './CircularSpinner';
 import { Badge } from './ui/badge';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { closestCenter, DndContext, KeyboardSensor, PointerSensor, TouchSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { Card } from './ui/card';
 
 const List = (props) => {
 
+    const navigate = useNavigate();
     const token = (localStorage.getItem("token") || '');
     let heading = '';
     let titles = props.titles;
@@ -111,6 +112,10 @@ const List = (props) => {
                     setIsEditing(false);
                     setEditIndex("");
                     setOldText("");
+                    if(error.response.status == 401) {
+                        localStorage.removeItem('token');
+                        navigate('/login');
+                    }
                     if(error.response.status == 405) {
                         alert("There is already an item with same slug in this box. Duplicates not allowed.");
                     }
@@ -133,6 +138,10 @@ const List = (props) => {
                     setIsLoading(false);
                     setNewItem('');
                     setIsAdding(false);
+                    if(error.response.status == 401) {
+                        localStorage.removeItem('token');
+                        navigate('/login');
+                    }
                     if(error.response.status == 405) {
                         alert("There is already an item with same slug in this box. Duplicates not allowed.");
                     }
@@ -185,6 +194,10 @@ const List = (props) => {
             }).catch(error => {
                 setIsLoading(false);
                 console.log(error.response.data.message);
+                if(error.response.status == 401) {
+                    localStorage.removeItem('token');
+                    navigate('/login');
+                }
             });
         }
     };
