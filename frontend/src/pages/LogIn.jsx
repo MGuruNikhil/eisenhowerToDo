@@ -15,6 +15,7 @@ import { apiUrl } from '../config'
 import CircularSpinner from "@/components/CircularSpinner"
 import axios from "axios"
 import NavBar from "@/components/navBar"
+import About from "@/components/About"
 
 export function LogIn() {
 
@@ -79,34 +80,38 @@ export function LogIn() {
     };
 
     return (
-        <div className="w-screen h-screen flex flex-col bg-[#d4d4d4] dark:bg-background">
+        <div className="w-screen lg:h-screen flex flex-col bg-[#d4d4d4] dark:bg-background">
             <NavBar />
-            <div className="flex-1 flex items-center justify-center">
-                <Card className="w-[350px] relative overflow-hidden">
-                    <form onSubmit={handleSubmit}>
-                        <CardHeader>
-                            <CardTitle>Log In</CardTitle>
-                            <CardDescription>Enter your credentials and login to continue.</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="grid w-full items-center gap-4">
-                                <div className="flex flex-col space-y-1.5">
-                                    <Label htmlFor="email">Email</Label>
-                                    <Input value={email} onChange={(e) => setEmail(e.target.value)} ref={(el) => (inputRefs.current[0] = el)} onKeyDown={(e) => handleKeyDown(e, 0)} type="email" id="email" placeholder="Your registered email adderss" />
+            <div className="flex-1 w-full flex flex-col-reverse items-center justify-center lg:flex-row lg:overflow-hidden">
+                <About />
+                <div className="w-0 lg:w-[1px] h-0 lg:h-[80%] bg-foreground rounded-full"></div>
+                <div className="lg:flex-1 flex items-center justify-center">
+                    <Card className="w-[350px] relative overflow-hidden m-4">
+                        <form onSubmit={handleSubmit}>
+                            <CardHeader>
+                                <CardTitle>Log In</CardTitle>
+                                <CardDescription>Enter your credentials and log in to continue.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="grid w-full items-center gap-4">
+                                    <div className="flex flex-col space-y-1.5">
+                                        <Label htmlFor="email">Email</Label>
+                                        <Input value={email} onChange={(e) => setEmail(e.target.value)} ref={(el) => (inputRefs.current[0] = el)} onKeyDown={(e) => handleKeyDown(e, 0)} type="email" id="email" placeholder="Your registered email adderss" />
+                                    </div>
+                                    <div className="flex flex-col space-y-1.5">
+                                        <Label htmlFor="password">Password</Label>
+                                        <Input value={password} onChange={(e) => setPassword(e.target.value)} ref={(el) => (inputRefs.current[1] = el)} onKeyDown={(e) => handleKeyDown(e, 1)} type="password" id="password" placeholder="Password" />
+                                    </div>
                                 </div>
-                                <div className="flex flex-col space-y-1.5">
-                                    <Label htmlFor="password">Password</Label>
-                                    <Input value={password} onChange={(e) => setPassword(e.target.value)} ref={(el) => (inputRefs.current[1] = el)} onKeyDown={(e) => handleKeyDown(e, 1)} type="password" id="password" placeholder="Password" />
-                                </div>
-                            </div>
-                        </CardContent>
-                        <CardFooter className="flex justify-between">
-                            <Button type='submit'>Log In</Button>
-                            <Button onClick={() => navigate('/signup') } variant="outline">Sign Up</Button>
-                        </CardFooter>
-                    </form>
-                    {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
-                </Card>
+                            </CardContent>
+                            <CardFooter className="flex justify-between">
+                                <Button type='submit'>Log In</Button>
+                                <Button onClick={() => navigate('/signup') } variant="outline">Sign Up</Button>
+                            </CardFooter>
+                        </form>
+                        {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
+                    </Card>
+                </div>
             </div>
         </div>
     )

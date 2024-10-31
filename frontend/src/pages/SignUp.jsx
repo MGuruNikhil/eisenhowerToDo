@@ -1,3 +1,4 @@
+import About from "@/components/About"
 import CircularSpinner from "@/components/CircularSpinner"
 import NavBar from "@/components/navBar"
 import { Button } from "@/components/ui/button"
@@ -92,40 +93,44 @@ export function SignUp() {
     return (
         <div className="w-screen h-screen flex flex-col bg-[#d4d4d4] dark:bg-background">
             <NavBar />
-            <div className="flex-1 flex items-center justify-center">
-                <Card className="w-[350px] relative overflow-hidden">
-                    <form onSubmit={handleSubmit}>
-                    <CardHeader>
-                        <CardTitle>Sign Up</CardTitle>
-                        <CardDescription>Enter your credentials and SignUp to create an account.</CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid w-full items-center gap-4">
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="displayName">Name</Label>
-                                <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} ref={(el) => (inputRefs.current[0] = el)} onKeyDown={(e) => handleKeyDown(e, 0)} type="text" id="displayName" placeholder="Your name" />
+            <div className="flex-1 w-full flex flex-col-reverse items-center justify-center lg:flex-row lg:overflow-hidden">
+                <About />
+                <div className="w-0 lg:w-[1px] h-0 lg:h-[80%] bg-foreground rounded-full"></div>
+                <div className="lg:flex-1 flex items-center justify-center">
+                    <Card className="w-[350px] relative overflow-hidden">
+                        <form onSubmit={handleSubmit}>
+                        <CardHeader>
+                            <CardTitle>Sign Up</CardTitle>
+                            <CardDescription>Enter your credentials and sign up to create an account.</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="grid w-full items-center gap-4">
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="displayName">Name</Label>
+                                    <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} ref={(el) => (inputRefs.current[0] = el)} onKeyDown={(e) => handleKeyDown(e, 0)} type="text" id="displayName" placeholder="Your name" />
+                                </div>
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="email">Email</Label>
+                                    <Input value={email} onChange={(e) => setEmail(e.target.value)} ref={(el) => (inputRefs.current[1] = el)} onKeyDown={(e) => handleKeyDown(e, 1)} type="email" id="email" placeholder="Your email adderss" />
+                                </div>
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="password">Password</Label>
+                                    <Input value={password} onChange={(e) => setPassword(e.target.value)} ref={(el) => (inputRefs.current[2] = el)} onKeyDown={(e) => handleKeyDown(e, 2)} type="password" id="password" placeholder="Password" />
+                                </div>
+                                <div className="flex flex-col space-y-1.5">
+                                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                                    <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} ref={(el) => (inputRefs.current[3] = el)} onKeyDown={(e) => handleKeyDown(e, 3)} type="password" id="confirmPassword" placeholder="Confirm Password" />
+                                </div>
                             </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="email">Email</Label>
-                                <Input value={email} onChange={(e) => setEmail(e.target.value)} ref={(el) => (inputRefs.current[1] = el)} onKeyDown={(e) => handleKeyDown(e, 1)} type="email" id="email" placeholder="Your email adderss" />
-                            </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="password">Password</Label>
-                                <Input value={password} onChange={(e) => setPassword(e.target.value)} ref={(el) => (inputRefs.current[2] = el)} onKeyDown={(e) => handleKeyDown(e, 2)} type="password" id="password" placeholder="Password" />
-                            </div>
-                            <div className="flex flex-col space-y-1.5">
-                                <Label htmlFor="confirmPassword">Confirm Password</Label>
-                                <Input value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} ref={(el) => (inputRefs.current[3] = el)} onKeyDown={(e) => handleKeyDown(e, 3)} type="password" id="confirmPassword" placeholder="Confirm Password" />
-                            </div>
-                        </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between">
-                        <Button type='submit'>Sign Up</Button>
-                        <Button onClick={() => navigate('/login') } variant="outline">Log In</Button>
-                    </CardFooter>
-                    </form>
-                    {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
-                </Card>
+                        </CardContent>
+                        <CardFooter className="flex justify-between">
+                            <Button type='submit'>Sign Up</Button>
+                            <Button onClick={() => navigate('/login') } variant="outline">Log In</Button>
+                        </CardFooter>
+                        </form>
+                        {isLoading && <CircularSpinner Width="30px" StrokeWidth="3"/>}
+                    </Card>
+                </div>
             </div>
         </div>
     )
